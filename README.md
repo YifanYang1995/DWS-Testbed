@@ -4,7 +4,7 @@
 
 The simulator and GOODRL evaluator are derived from the public [GOODRL repository](https://github.com/YifanYang1995/GOODRL), which accompanies the ICLR 2025 paper [Graph Assisted Offline-Online Deep Reinforcement Learning for Dynamic Workflow Scheduling](https://openreview.net/forum?id=4PlbIfmX9o).
 
-## Scope
+## 🎯 Scope
 
 This repository is intended for controlled **evaluation**, baseline comparison, and environment testing. It is not a training pipeline. A run processes one fixed stream of workflows and saves the flowtime of every completed workflow as a NumPy array.
 
@@ -21,7 +21,7 @@ Included evaluators:
 
 Lower mean flowtime is better.
 
-## DWS environment
+## ⚙️ DWS environment
 
 Each scientific workflow is a directed acyclic graph (DAG). Tasks become ready when their predecessors finish. At every environment step, the scheduler assigns the current ready task to one VM in a heterogeneous pool.
 
@@ -38,19 +38,20 @@ The simulator exposes three state interfaces:
 - `resetGP()` / `stepGP()` for heuristic and GPHH feature vectors;
 - `resetES()` / `stepES()` for ERL-DWS VM feature sequences.
 
-## Repository layout
+## 📁 Repository layout
 
 ```text
 .
 ├── Step-1-{EST,PEFT,HEFT,GP,ESRL,GOODRL}.py  # Evaluation entry points
-├── evaluation_utils.py                       # Shared data, seed, logging, and output logic
 ├── config/Params.py                          # Command-line arguments
 ├── env/
 │   ├── workflow_scheduling_v3/               # Event-driven DWS simulator
 │   │   ├── dax/                              # Scientific-workflow XML files
 │   │   └── lib/                              # DAG, VM, queue, and simulator components
 ├── policy/                                   # GOODRL and ERL-DWS policy definitions
-├── utils/                                    # Policy/checkpoint compatibility utilities
+├── utils/
+│   ├── evaluation_utils.py                   # Shared data, seed, logging, and output logic
+│   └── ...                                   # Policy/checkpoint compatibility utilities
 ├── data/
 │   ├── instances/                            # Fixed workflow-type streams
 │   └── heft_reference/                       # Matching HEFT arrays for normalized comparison
@@ -63,7 +64,7 @@ The simulator exposes three state interfaces:
 └── outputs/                                  # Generated arrays; ignored by Git
 ```
 
-## Requirements
+## 📦 Requirements
 
 The reference implementation targets:
 
@@ -92,7 +93,7 @@ the remaining requirements when a non-default CUDA build is required. Weights
 & Biases support is installed by `requirements.txt`, but logging remains
 disabled unless `--use_wandb true` is passed.
 
-## Quick start
+## 🚀 Quick start
 
 Run commands from the repository root because the checkpoint and data defaults are repository-relative.
 
@@ -105,10 +106,12 @@ python Step-1-HEFT.py \
   --vm_types 6 \
   --each_vm_type_num 4 \
   --arr_rate 5.4 \
-  --rate_dist change5 \
   --data_name 2024 \
   --algo_seed 42
 ```
+
+`--rate_dist` is intentionally omitted here. This matches the original GOODRL
+environment: arrivals follow the constant rate supplied through `--arr_rate`.
 
 To generate a new dataset, request a numeric suffix whose file does not yet
 exist:
@@ -141,10 +144,10 @@ online_{METHOD}_{RATE_DIST}_{DATASET}_{VM_TYPES}_{VMS_PER_TYPE}_{RATE}_seed{SEED
 For example:
 
 ```text
-outputs/online_HEFT_change5_2024_6_4_5.4_seed42.npy
+outputs/online_HEFT_constant_2024_6_4_5.4_seed42.npy
 ```
 
-## Reproduce the reference setting
+## 🔬 Reproduce the reference setting
 
 The bundled workbook uses `seed=42`, `wf_num=20000`, and `wf_size=all`. A representative GOODRL command is:
 
@@ -187,7 +190,7 @@ Other bundled identifiers are documented in [`pretrained/README.md`](pretrained/
 
 The ERL-DWS `.pth` files contain complete Python policy objects and are loaded with `weights_only=False`. Only load these bundled, trusted files or artifacts from a source you trust.
 
-## Datasets and workflow templates
+## 🗂️ Datasets and workflow templates
 
 The bundled validation files have original shape `(1, 10000, 30)` and are
 flattened into one workflow stream before taking the first `wf_num` entries.
@@ -228,25 +231,29 @@ is reused and no random generation occurs. Generated instance files are local
 artifacts and are ignored by Git. Pass an existing suffix such as
 `--data_name 2026` to skip generation.
 
-## Arrival-rate patterns
+## 📈 Arrival-rate patterns
 
-`--arr_rate` is entered as workflows per hour and converted internally to workflows per second. Piecewise patterns are also defined internally per second; the table below shows the more readable per-hour values.
+`--arr_rate` is entered as workflows per hour and converted internally to
+workflows per second. By default, `--rate_dist` is unset and this rate remains
+constant, matching the original GOODRL environment. Pass `--rate_dist`
+explicitly only when evaluating a changing arrival-rate pattern. Piecewise
+patterns are defined internally per second; the table below shows the more
+readable per-hour values.
 
 | `--rate_dist` | `--arr_rate` | Segment rates per hour |
 |---|---:|---|
-| `constant` | any positive value | Constant at the supplied rate |
+| omitted or `constant` | any positive value | Constant at the supplied rate (default) |
 | `change5` | 5.4 | 5.4 → 7.2 → 9.0 |
 | `change5` | 9.0 | 9.0 → 7.2 → 5.4 |
 | `change10` | 5.4 | 5.4 → 9.0 → 12.6 |
 | `change10` | 9.0 | 12.6 → 9.0 → 5.4 |
-| `cyclic` | label only | 5.4 ↔ 9.0, repeated |
-| `1cyclic` | label only | 5.4 ↔ 12.6, repeated |
+| `cyclic` | label only | 5.4 ↔ 12.6, repeated |
 | `multipeak` | label only | 5.4 → 12.6 → 5.4 → 5.4 → 12.6 → 5.4 |
 | `flash` | label only | 5.4 → 5.4 → 5.4 → 12.6 → 5.4 → 5.4 |
 
 For piecewise patterns marked “label only,” the supplied nominal rate remains part of the experiment label and output filename but does not alter the fixed segment list.
 
-## Reference results
+## 📊 Reference results
 
 [`reference_results/results_seed42.xlsx`](reference_results/results_seed42.xlsx) contains mean flowtime results for:
 
@@ -274,7 +281,7 @@ A compact check for the `6×4`, `5.4↗` setting is:
 
 These single-seed values are provided as implementation checks, not as uncertainty estimates or final statistical claims. For a study, evaluate multiple independent seeds and report an aggregate with dispersion or confidence intervals.
 
-## SLURM example
+## 🖥️ SLURM example
 
 The submission template contains no user-specific cluster paths. Select the Python executable through `PYTHON_BIN` if needed:
 
@@ -294,16 +301,18 @@ sbatch --export=ALL,PYTHON_BIN=/path/to/venv/bin/python \
 Arguments are:
 
 ```text
-METHOD VM_TYPES VMS_PER_TYPE ARRIVAL_RATE WF_NUM RATE_DIST [DATASET]
+METHOD VM_TYPES VMS_PER_TYPE ARRIVAL_RATE WF_NUM [RATE_DIST] [DATASET]
 ```
 
-The optional `DATASET` is a filename suffix. If its file exists, the file is
-loaded; if not, `int(DATASET)` is used as the dataset seed. The template uses the
-SLURM array task ID as `--algo_seed`; when `DATASET` is absent, the script also
-passes that ID explicitly through `--data_name`. Edit the resource directives
-for the local cluster policy.
+Both `RATE_DIST` and `DATASET` are optional. An empty or omitted `RATE_DIST`
+leaves `--rate_dist` unset and therefore uses constant arrivals. To select a
+dataset while keeping constant arrivals, pass an empty sixth argument, for
+example `scripts/submit_slurm.sh HEFT 6 4 5.4 20000 "" 2024`. If `DATASET` is
+absent, the script passes the SLURM array task ID through `--data_name`. If the
+corresponding file does not exist, `int(DATASET)` is used as its generation
+seed. Edit the resource directives for the local cluster policy.
 
-## Optional W&B logging
+## 📡 Optional W&B logging
 
 Logging is disabled by default and no network connection is required for an evaluation:
 
@@ -317,7 +326,7 @@ Enable logging with:
 python Step-1-HEFT.py --use_wandb true --wandb_project DWS-Testbed [arguments]
 ```
 
-## Reproducibility checklist
+## ✅ Reproducibility checklist
 
 Record the following with each result:
 
@@ -325,11 +334,11 @@ Record the following with each result:
 2. Driver/method and checkpoint identifier, if applicable.
 3. `data_name`, `wf_num`, and `wf_size`.
 4. VM pool: `vm_types × each_vm_type_num`.
-5. `rate_dist` and nominal `arr_rate`.
+5. Effective `rate_dist` (`constant` when omitted) and nominal `arr_rate`.
 6. `algo_seed` and any cluster thread settings.
 7. Raw `outputs/*.npy` file before aggregation.
 
-## Citation
+## 📝 Citation
 
 If this testbed or the GOODRL implementation supports your work, cite the GOODRL paper:
 
@@ -342,6 +351,6 @@ If this testbed or the GOODRL implementation supports your work, cite the GOODRL
 }
 ```
 
-## License
+## ⚖️ License
 
 This repository is released under the MIT License. See [`LICENSE`](LICENSE).

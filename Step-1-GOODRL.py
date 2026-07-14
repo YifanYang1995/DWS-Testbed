@@ -6,7 +6,7 @@ import torch
 
 from config.Params import configs
 from env.workflow_scheduling_v3.simulator_wf import WFEnv
-from evaluation_utils import (
+from utils.evaluation_utils import (
     ROOT,
     finalize_evaluation,
     init_wandb,

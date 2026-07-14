@@ -16,7 +16,7 @@ VM_TYPES="${2:-6}"
 VMS_PER_TYPE="${3:-4}"
 ARRIVAL_RATE="${4:-5.4}"
 WF_NUM="${5:-20000}"
-RATE_DIST="${6:-change5}"
+RATE_DIST="${6:-}"
 DATASET_ARG="${7:-}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 SEED="${SLURM_ARRAY_TASK_ID:-42}"
@@ -49,9 +49,12 @@ ARGS=(
   --vm_types "${VM_TYPES}"
   --each_vm_type_num "${VMS_PER_TYPE}"
   --arr_rate "${ARRIVAL_RATE}"
-  --rate_dist "${RATE_DIST}"
   --data_name "${DATASET}"
   --use_wandb false
 )
+
+if [[ -n "${RATE_DIST}" ]]; then
+  ARGS+=(--rate_dist "${RATE_DIST}")
+fi
 
 srun "${PYTHON_BIN}" "${DRIVER}" "${ARGS[@]}"

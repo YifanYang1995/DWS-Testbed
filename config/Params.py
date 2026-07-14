@@ -85,9 +85,9 @@ parser.add_argument("--each_vm_type_num", type=int, default=7)
 parser.add_argument("--vm_types", type=int, default=5)
 parser.add_argument(
     "--rate_dist",
-    choices=("constant", "change5", "change10", "cyclic", "multipeak", "flash", "1cyclic"),
-    default="1cyclic",
-    help="Arrival-rate pattern",
+    choices=("constant", "change5", "change10", "cyclic", "multipeak", "flash"),
+    default=None,
+    help="Optional arrival-rate pattern; omit for a constant --arr_rate",
 )
 parser.add_argument(
     "--data_name",

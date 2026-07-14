@@ -14,14 +14,13 @@ from env.workflow_scheduling_v3.lib.poissonSampling import (
 from env.workflow_scheduling_v3.simulator_wf import WFEnv
 
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]
 INSTANCES_DIR = ROOT / "data" / "instances"
 GENERATION_TEMPLATE = INSTANCES_DIR / "validation_instance_2026.npy"
 ARRIVAL_PATTERNS = {
-    "cyclic": [0.0015, 0.0025, 0.0015, 0.0025, 0.0015, 0.0025, 0.0015],
+    "cyclic": [0.0015, 0.0035, 0.0015, 0.0035, 0.0015, 0.0035, 0.0015],
     "multipeak": [0.0015, 0.0035, 0.0015, 0.0015, 0.0035, 0.0015],
     "flash": [0.0015, 0.0015, 0.0015, 0.0035, 0.0015, 0.0015],
-    "1cyclic": [0.0015, 0.0035, 0.0015, 0.0035, 0.0015, 0.0035, 0.0015],
 }
 
 
@@ -127,6 +126,8 @@ def _load_dataset(configs):
 def _sample_arrivals(configs):
     shape = configs.valid_dataset.shape
     rate = configs.arr_rate
+    if configs.rate_dist in {None, "constant"}:
+        return sample_poisson_shape(rate, shape)
     if configs.rate_dist == "change10":
         if np.isclose(rate, 0.0015):
             pattern = [0.0015, 0.0025, 0.0035]
@@ -146,6 +147,10 @@ def _sample_arrivals(configs):
     if configs.rate_dist in ARRIVAL_PATTERNS:
         return sample_poisson_piecewise(ARRIVAL_PATTERNS[configs.rate_dist], shape)
     return sample_poisson_shape(rate, shape)
+
+
+def rate_distribution_name(configs):
+    return configs.rate_dist or "constant"
 
 
 def prepare_evaluation(configs):
@@ -168,7 +173,7 @@ def output_path(method, configs):
     output_dir.mkdir(parents=True, exist_ok=True)
     rate_per_hour = configs.arr_rate * 3600
     filename = (
-        f"online_{method}_{configs.rate_dist}_{configs.data_name}_"
+        f"online_{method}_{rate_distribution_name(configs)}_{configs.data_name}_"
         f"{configs.vm_types}_{configs.each_vm_type_num}_{rate_per_hour:.1f}_"
         f"seed{configs.algo_seed}.npy"
     )
@@ -178,7 +183,7 @@ def output_path(method, configs):
 def heft_reference_path(configs):
     rate_per_hour = configs.arr_rate * 3600
     filename = (
-        f"online_HEFT_{configs.rate_dist}_{configs.data_name}_"
+        f"online_HEFT_{rate_distribution_name(configs)}_{configs.data_name}_"
         f"{configs.vm_types}_{configs.each_vm_type_num}_{rate_per_hour:.1f}.npy"
     )
     return ROOT / "data" / "heft_reference" / filename
@@ -201,7 +206,7 @@ def init_wandb(method, configs):
     return wandb.init(
         project=configs.wandb_project,
         group=(
-            f"{configs.data_name}_{configs.rate_dist}_"
+            f"{configs.data_name}_{rate_distribution_name(configs)}_"
             f"{configs.vm_types}_{configs.each_vm_type_num}_{configs.arr_rate * 3600:.1f}"
         ),
         name=f"{method}_seed{configs.algo_seed}",
@@ -214,7 +219,7 @@ def init_wandb(method, configs):
             "vm_types": configs.vm_types,
             "each_vm_type_num": configs.each_vm_type_num,
             "arrival_rate_per_hour": configs.arr_rate * 3600,
-            "rate_dist": configs.rate_dist,
+            "rate_dist": rate_distribution_name(configs),
             "device": configs.device,
         },
     )

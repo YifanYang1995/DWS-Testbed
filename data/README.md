@@ -54,6 +54,9 @@ Each ID selects one DAG template from `env/workflow_scheduling_v3/dax/`.
 
 ## HEFT reference arrays
 
-`heft_reference/` contains the per-workflow HEFT arrays used by `evaluation_utils.py` for an optional workload-normalized comparison. A comparison is printed only when the method output and HEFT reference have identical shapes.
+`heft_reference/` contains the per-workflow HEFT arrays used by
+`utils/evaluation_utils.py` for an optional workload-normalized comparison. A
+comparison is printed only when the method output and HEFT reference have
+identical shapes.
 
 The raw method output remains the source of truth. Do not substitute the normalized comparison percentage for mean flowtime without explicitly defining the metric.
