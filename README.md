@@ -97,7 +97,8 @@ disabled unless `--use_wandb true` is passed.
 
 Run commands from the repository root because the checkpoint and data defaults are repository-relative.
 
-A short HEFT smoke test:
+A short HEFT smoke test in the constant-arrival-rate environment used by the
+GOODRL paper:
 
 ```bash
 python Step-1-HEFT.py \
@@ -106,12 +107,14 @@ python Step-1-HEFT.py \
   --vm_types 6 \
   --each_vm_type_num 4 \
   --arr_rate 5.4 \
+  --rate_dist constant \
   --data_name 2024 \
   --algo_seed 42
 ```
 
-`--rate_dist` is intentionally omitted here. This matches the original GOODRL
-environment: arrivals follow the constant rate supplied through `--arr_rate`.
+The original GOODRL environment does not vary the arrival rate over time.
+Therefore, this example sets `--rate_dist constant`, so arrivals follow the
+fixed rate supplied through `--arr_rate`.
 
 To generate a new dataset, request a numeric suffix whose file does not yet
 exist:
