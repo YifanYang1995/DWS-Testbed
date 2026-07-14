@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments and editors
+.venv/
+venv/
+.idea/
+.vscode/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Generated experiment artifacts
+outputs/*
+!outputs/.gitkeep
+# Datasets generated from a new numeric --data_name value
+data/instances/validation_instance_*.npy
+logs/
+wandb/
+slurm-*.out
