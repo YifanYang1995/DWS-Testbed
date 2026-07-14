@@ -4,6 +4,9 @@
 
 The simulator and GOODRL evaluator are derived from the public [GOODRL repository](https://github.com/YifanYang1995/GOODRL), which accompanies the ICLR 2025 paper [Graph Assisted Offline-Online Deep Reinforcement Learning for Dynamic Workflow Scheduling](https://openreview.net/forum?id=4PlbIfmX9o).
 
+For a deadline-constrained DWS environment variant that uses total cost as its
+objective, see [**Simulator-DCDWSC**](https://github.com/YifanYang1995/Simulator-DCDWSC).
+
 ## 🎯 Scope
 
 This repository is intended for controlled **evaluation**, baseline comparison, and environment testing. It is not a training pipeline. A run processes one fixed stream of workflows and saves the flowtime of every completed workflow as a NumPy array.
