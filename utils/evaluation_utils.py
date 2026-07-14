@@ -118,8 +118,6 @@ def _load_dataset(configs):
         raise ValueError(
             f"wf_num={configs.wf_num} exceeds the {dataset.shape[2]} workflows in {dataset_path.name}"
         )
-    if configs.data_name == "12" and configs.wf_size != "all":
-        raise ValueError("Dataset '12' contains 12 workflow templates and requires --wf_size all")
     return dataset[:, :, : configs.wf_num]
 
 

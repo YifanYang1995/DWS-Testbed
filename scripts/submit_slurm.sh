@@ -44,7 +44,6 @@ export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK:-4}"
 
 ARGS=(
   --algo_seed "${SEED}"
-  --wf_size all
   --wf_num "${WF_NUM}"
   --vm_types "${VM_TYPES}"
   --each_vm_type_num "${VMS_PER_TYPE}"

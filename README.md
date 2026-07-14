@@ -103,7 +103,6 @@ GOODRL paper:
 ```bash
 python Step-1-HEFT.py \
   --wf_num 100 \
-  --wf_size all \
   --vm_types 6 \
   --each_vm_type_num 4 \
   --arr_rate 5.4 \
@@ -120,7 +119,7 @@ To generate a new dataset, request a numeric suffix whose file does not yet
 exist:
 
 ```bash
-python Step-1-HEFT.py --data_name 42 --algo_seed 7 --wf_num 100 --wf_size S
+python Step-1-HEFT.py --data_name 42 --algo_seed 7 --wf_num 100
 ```
 
 This creates `data/instances/validation_instance_42.npy` with dataset seed `42`;
@@ -152,7 +151,8 @@ outputs/online_HEFT_constant_2024_6_4_5.4_seed42.npy
 
 ## 🔬 Reproduce the reference setting
 
-The bundled workbook uses `seed=42`, `wf_num=20000`, and `wf_size=all`. A representative GOODRL command is:
+The bundled workbook uses `seed=42` and `wf_num=20000`. A representative
+GOODRL command is:
 
 ```bash
 export OMP_NUM_THREADS=4
@@ -161,7 +161,6 @@ export MKL_NUM_THREADS=4
 
 python Step-1-GOODRL.py \
   --wf_num 20000 \
-  --wf_size all \
   --vm_types 6 \
   --each_vm_type_num 4 \
   --arr_rate 5.4 \
@@ -203,13 +202,10 @@ Their filename suffix is the random seed used to create the array.
 |---|---:|---|---|
 | `2024` | 0–3 | Historical reverse-order loading | Yes |
 | `2026` | 0–3 | Stored order | Yes |
-| `12` | 0–11 | Stored order; requires `--wf_size all` | No |
 
 The `2024` and `2026` files were generated with their suffix as the NumPy seed
-and `randint(0, 4, shape)`. The `12` file follows the same suffix-as-seed
-convention but uses `randint(0, 12, shape)` to cover all 12 templates.
-
-The `all` template group contains 12 DAGs across CyberShake, Montage, Inspiral, and Sipht, with small, medium, and large variants. See [`data/README.md`](data/README.md) for the exact mapping.
+and `randint(0, 4, shape)`. See [`data/README.md`](data/README.md) for additional
+instance metadata and the exact template mapping.
 
 ### Automatic dataset generation
 
@@ -335,7 +331,7 @@ Record the following with each result:
 
 1. Git commit and Python/package versions.
 2. Driver/method and checkpoint identifier, if applicable.
-3. `data_name`, `wf_num`, and `wf_size`.
+3. `data_name` and `wf_num`.
 4. VM pool: `vm_types × each_vm_type_num`.
 5. Effective `rate_dist` (`constant` when omitted) and nominal `arr_rate`.
 6. `algo_seed` and any cluster thread settings.

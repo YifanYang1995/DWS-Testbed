@@ -69,8 +69,8 @@ parser.add_argument("--wf_num", type=int, default=100, help="Number of workflows
 parser.add_argument(
     "--wf_size",
     choices=("S", "M", "L", "XL", "all"),
-    default="all",
-    help="Workflow template group; use 'all' for the bundled 12-template datasets",
+    default="S",
+    help=argparse.SUPPRESS,
 )
 parser.add_argument("--valid_num", type=int, default=1)
 parser.add_argument("--generateWay", default="rotation")

@@ -2,17 +2,14 @@
 
 ## Bundled instance streams
 
-`instances/` contains three NumPy arrays with original shape `(1, 10000, 30)`:
+`instances/` contains two NumPy arrays with original shape `(1, 10000, 30)`:
 
 - `validation_instance_2024.npy`: IDs 0–3; loaded in reverse order for historical compatibility.
 - `validation_instance_2026.npy`: IDs 0–3; loaded in stored order.
-- `validation_instance_12.npy`: IDs 0–11; loaded in stored order and used with `--wf_size all`.
 
 The filename suffix is the random seed used to generate the array. The `2024`
 and `2026` arrays use the equivalent of
-`np.random.seed(seed); np.random.randint(0, 4, shape)`. The `12` array uses seed
-12 and `np.random.randint(0, 12, shape)` so that it can select all 12 workflow
-templates.
+`np.random.seed(seed); np.random.randint(0, 4, shape)`.
 
 ## Automatic generation
 
@@ -43,14 +40,6 @@ Each ID selects one DAG template from `env/workflow_scheduling_v3/dax/`.
 | 1 | Montage_25 |
 | 2 | Inspiral_30 |
 | 3 | Sipht_30 |
-| 4 | CyberShake_50 |
-| 5 | Montage_50 |
-| 6 | Inspiral_50 |
-| 7 | Sipht_60 |
-| 8 | CyberShake_100 |
-| 9 | Montage_100 |
-| 10 | Inspiral_100 |
-| 11 | Sipht_100 |
 
 ## HEFT reference arrays
 
