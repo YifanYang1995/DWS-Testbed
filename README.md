@@ -1,6 +1,6 @@
 # DWS-Testbed
 
-**DWS-Testbed** is a reproducible, event-driven testbed for the Dynamic Workflow Scheduling (DWS) problem. It provides fixed workflow streams, scientific-workflow DAGs, heterogeneous VM pools, six evaluation baselines, bundled pretrained artifacts, and single-seed reference results.
+**DWS-Testbed** is a reproducible, event-driven testbed for the Dynamic Workflow Scheduling (DWS) in Cloud Computing problem. It provides fixed workflow streams, scientific-workflow DAGs, heterogeneous VM pools, six evaluation baselines, bundled pretrained artifacts, and single-seed reference results.
 
 The simulator and GOODRL evaluator are derived from the public [GOODRL repository](https://github.com/YifanYang1995/GOODRL), which accompanies the ICLR 2025 paper [Graph Assisted Offline-Online Deep Reinforcement Learning for Dynamic Workflow Scheduling](https://openreview.net/forum?id=4PlbIfmX9o).
 
@@ -120,7 +120,7 @@ To generate a new dataset, request a numeric suffix whose file does not yet
 exist:
 
 ```bash
-python Step-1-HEFT.py --data_name 42 --algo_seed 7 --wf_num 100 --wf_size all
+python Step-1-HEFT.py --data_name 42 --algo_seed 7 --wf_num 100 --wf_size S
 ```
 
 This creates `data/instances/validation_instance_42.npy` with dataset seed `42`;
